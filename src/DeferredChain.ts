@@ -4,7 +4,7 @@ export class DeferredChain<T> {
     return null;
   }
 
-  public resolve(target:T):void {
+  public setTarget(target:T):void {
     return null;
   }
 
