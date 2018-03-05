@@ -1,5 +1,8 @@
 import { DeferredChain } from '../DeferredChain';
 
+// tslint:disable:typedef
+// tslint:disable:no-magic-numbers
+// tslint:disable:max-classes-per-file
 describe('DeferredChain', () => {
   it('correctly saves chained getters for later execution', () => {
     // given
@@ -33,7 +36,7 @@ describe('DeferredChain', () => {
         },
       },
     };
-    const deferred = new DeferredChain<typeof target>();
+    const deferred:DeferredChain<typeof target> = new DeferredChain<typeof target>();
 
     // when
     const { nested: { field } } = deferred.getProxy();
@@ -46,11 +49,11 @@ describe('DeferredChain', () => {
   it('supports chaining method calls and provides correct `this`', () => {
     // given
     class Target {
-      field = {
+      private field = {
         value: 123,
       };
 
-      getField() {
+      public getField() {
         return this.field;
       }
     }
@@ -96,11 +99,11 @@ describe('DeferredChain', () => {
   it(`doesn't provide "this" when method is invoked as a variable`, () => {
     // given
     class Target {
-      field = {
+      private field = {
         value: 123,
       };
 
-      getField() {
+      public getField() {
         return this.field;
       }
     }
@@ -112,7 +115,7 @@ describe('DeferredChain', () => {
     deferred.setTarget(new Target());
 
     // then
-    expect(getField()).toBeUndefined()
+    expect(getField()).toBeUndefined();
   });
 
   it(`doesn't support accessing primitive values before setting the chain target`, () => {
@@ -125,7 +128,7 @@ describe('DeferredChain', () => {
     const deferred = new DeferredChain<typeof target>();
 
     // when
-    const value = deferred.getProxy().nested.value;
+    const value:number = deferred.getProxy().nested.value;
     deferred.setTarget(target);
 
     // then
