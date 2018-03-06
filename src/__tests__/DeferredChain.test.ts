@@ -68,6 +68,30 @@ describe('DeferredChain', () => {
     expect(field.value).toEqual(123);
   });
 
+  it('supports chaining methods calls and provides correct arguments', () => {
+    // given
+    class Target {
+      private field = {
+        value: 123,
+      };
+
+      public getValue(a:string, b:string, c:string) {
+        if (a === 'a' && b === 'b' && c === 'c') {
+          return this.field;
+        }
+      }
+    }
+
+    const deferred = new DeferredChain<Target>();
+
+    // when
+    const someObject:any = deferred.getProxy().getValue('a', 'b', 'c');
+    deferred.setTarget(new Target());
+
+    // then
+    expect(someObject.value).toEqual(123);
+  });
+
   it('allows replacing target object multiple times', () => {
     // given
     const target1 = {
@@ -99,23 +123,19 @@ describe('DeferredChain', () => {
   it(`doesn't provide "this" when method is invoked as a variable`, () => {
     // given
     class Target {
-      private field = {
-        value: 123,
-      };
-
-      public getField() {
-        return this.field;
+      public getThis() {
+        return this;
       }
     }
 
     const deferred = new DeferredChain<Target>();
 
     // when
-    const { getField } = deferred.getProxy();
+    const { getThis } = deferred.getProxy();
     deferred.setTarget(new Target());
 
     // then
-    expect(getField()).toBeUndefined();
+    expect(getThis()).toBeUndefined();
   });
 
   it(`doesn't support accessing primitive values before setting the chain target`, () => {

@@ -40,9 +40,24 @@ class DeferredProxyHandler<T extends {}> implements ProxyHandler<T> {
     if (this.hasTarget()) {
       return this.execCall(call);
     }
+    return this.createProxyFor(call);
+  }
+
+  public apply(neverTarget:T, thisArg:any, argArray:any = []):any {
+    const call:MethodCall = { type: 'method', args: argArray, thisContext: thisArg };
+    if (this.hasTarget()) {
+      return this.execCall(call);
+    }
+    return this.createProxyFor(call);
+  }
+
+  private createProxyFor(call:GetterCall | MethodCall):any {
     const nextChainHandler:DeferredProxyHandler<T> = new DeferredProxyHandler<T>(call);
     nextChainHandler.setParent(this);
-    return new Proxy({} as any, nextChainHandler);
+    const proxyTarget:any = function syntheticTarget():void {
+      return undefined;
+    };
+    return new Proxy(proxyTarget, nextChainHandler);
   }
 
   private hasTarget():boolean {
