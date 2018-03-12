@@ -23,6 +23,10 @@ Allows collecting chained calls that are evaluated asynchronously when the targe
     expect(result).toEqual('something');
 ```
 
+## Requirements
+
+* Support for [Proxy object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) (available in node.js >= 6.5 and [all modern browsers](http://tonsky.me/blog/compatibility/)).
+
 ## Features
 
 * allows performing property chain or even method calls on nonexistent objects

@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2015",
     "module": "commonjs",
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "importHelpers": true,
+    "declaration": true,
     "baseUrl": "./",
     "pretty": true,
     "paths": {
@@ -16,7 +16,7 @@
       ]
     },
     "lib": [
-      "es2017"
+      "es2015"
     ]
   }
 }
