@@ -1,6 +1,6 @@
 {
   "name": "deferred-proxy-chain",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Allows collecting chained calls that are evaluated asynchronously when the target object arrives",
   "main": "src/DeferredChain.js",
   "types": "src/DeferredChain.d.ts",
