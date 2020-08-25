@@ -76,8 +76,18 @@ class DeferredProxyHandler<T extends {}> implements ProxyHandler<T> {
 
 function execCallOnTarget(target:any, call:ProxyInitiator):any {
   if (call.type === 'getter') {
+
+    const descriptor:PropertyDescriptor | undefined =
+      Object.getOwnPropertyDescriptor(Object.getPrototypeOf(target), call.name);
+
+    if (descriptor && descriptor.value && descriptor.value instanceof Function) {
+      // binding a method to a `this` as a target object
+      return descriptor.value.bind(target);
+    }
+
     return target[call.name];
   }
+
   if (call.type === 'method') {
     return target.apply(call.thisContext, call.args);
   }

@@ -67,6 +67,34 @@ describe('DeferredChain', () => {
     // then
     expect(field.value).toEqual(123);
   });
+  it('supports chaining getter and provides correct `this`', () => {
+    // given
+    class Target {
+      private innerField?:number;
+
+      public setField(value:number):void {
+        this.innerField = value;
+      }
+
+      public get field():number|undefined {
+        return this.innerField;
+      }
+    }
+
+    interface WrappedTarget {
+      targetObj:Target;
+    }
+
+    const deferred = new DeferredChain<WrappedTarget>();
+
+    // when
+    const { targetObj } = deferred.getProxy();
+    deferred.setTarget({ targetObj: new Target() });
+    targetObj.setField(123);
+
+    // then
+    expect(targetObj.field).toEqual(123);
+  });
 
   it('supports chaining methods calls and provides correct arguments', () => {
     // given
@@ -120,7 +148,7 @@ describe('DeferredChain', () => {
     expect(func()).toEqual('target 2');
   });
 
-  it(`doesn't provide "this" when method is invoked as a variable`, () => {
+  it('does provide "this" even when method is invoked as a variable (side effect)', () => {
     // given
     class Target {
       public getThis() {
@@ -135,10 +163,10 @@ describe('DeferredChain', () => {
     deferred.setTarget(new Target());
 
     // then
-    expect(getThis()).toBeUndefined();
+    expect(getThis()).toBeInstanceOf(Target);
   });
 
-  it(`doesn't support accessing primitive values before setting the chain target`, () => {
+  it("doesn't support accessing primitive values before setting the chain target", () => {
     // given
     const target = {
       nested: {
