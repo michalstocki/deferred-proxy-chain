@@ -67,7 +67,8 @@ describe('DeferredChain', () => {
     // then
     expect(field.value).toEqual(123);
   });
-  it('supports chaining getter and provides correct `this`', () => {
+
+  it('supports chaining method calls and provides correct `this` when called on target obtained from proxy', () => {
     // given
     class Target {
       private innerField?:number;
@@ -148,7 +149,7 @@ describe('DeferredChain', () => {
     expect(func()).toEqual('target 2');
   });
 
-  it('does provide "this" even when method is invoked as a variable (side effect)', () => {
+  it(`doesn't provide "this" when method is invoked as a variable`, () => {
     // given
     class Target {
       public getThis() {
@@ -163,7 +164,7 @@ describe('DeferredChain', () => {
     deferred.setTarget(new Target());
 
     // then
-    expect(getThis()).toBeInstanceOf(Target);
+    expect(getThis()).toBeUndefined();
   });
 
   it("doesn't support accessing primitive values before setting the chain target", () => {

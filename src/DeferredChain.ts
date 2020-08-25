@@ -18,6 +18,8 @@ export class DeferredChain<T> {
 
 }
 
+const PROXY_RECOGNITION_SYMBOL:unique symbol = Symbol('PROXY_RECOGNITION_SYMBOL');
+
 // tslint:disable:max-classes-per-file
 class DeferredProxyHandler<T extends {}> implements ProxyHandler<T> {
 
@@ -36,6 +38,10 @@ class DeferredProxyHandler<T extends {}> implements ProxyHandler<T> {
   }
 
   public get(neverTarget:T, property:PropertyKey, receiver:T):any {
+    if (property === PROXY_RECOGNITION_SYMBOL) {
+      return true;
+    }
+
     const call:GetterCall = { name: property, type: 'getter' };
     if (this.hasTarget()) {
       return this.execCall(call);
@@ -76,13 +82,20 @@ class DeferredProxyHandler<T extends {}> implements ProxyHandler<T> {
 
 function execCallOnTarget(target:any, call:ProxyInitiator):any {
   if (call.type === 'getter') {
-
     const descriptor:PropertyDescriptor | undefined =
       Object.getOwnPropertyDescriptor(Object.getPrototypeOf(target), call.name);
 
     if (descriptor && descriptor.value && descriptor.value instanceof Function) {
-      // binding a method to a `this` as a target object
-      return descriptor.value.bind(target);
+      return function (this:any):any {
+        let thisArg:any;
+
+        if (this && (this)[PROXY_RECOGNITION_SYMBOL]) {
+          // binding a method to a `this` as a target object when recognized a chained method call
+          thisArg = target;
+        }
+
+        return target[call.name].apply(thisArg, arguments);
+      };
     }
 
     return target[call.name];
