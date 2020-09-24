@@ -6,6 +6,8 @@
   "types": "src/DeferredChain.d.ts",
   "scripts": {
     "test": "jest",
+    "build": "tsc",
+    "check": "tslint -p .",
     "prepublish": "tsc"
   },
   "engines": {
@@ -22,13 +24,12 @@
   "author": "Michał Stocki",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^22.1.3",
-    "jest": "^22.4.2",
-    "ts-jest": "^22.4.0",
-    "tslint": "^5.9.1",
+    "@types/jest": "^26.0.14",
+    "jest": "^26.4.2",
+    "ts-jest": "^26.4.0",
+    "tslint": "^6.1.3",
     "tslint-config-uxpin": "^1.5.0",
-    "typescript": "^2.7.2"
+    "typescript": "^4.0.3"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
