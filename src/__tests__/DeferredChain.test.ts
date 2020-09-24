@@ -77,7 +77,7 @@ describe('DeferredChain', () => {
         this.innerField = value;
       }
 
-      public get field():number|undefined {
+      public get field():number | undefined {
         return this.innerField;
       }
     }
@@ -167,7 +167,7 @@ describe('DeferredChain', () => {
     expect(getThis()).toBeUndefined();
   });
 
-  it("doesn't support accessing primitive values before setting the chain target", () => {
+  it('doesn\'t support accessing primitive values before setting the chain target', () => {
     // given
     const target = {
       nested: {
